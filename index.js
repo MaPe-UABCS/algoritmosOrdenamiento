@@ -3,29 +3,110 @@ const fs = require("node:fs/promises");
 const COMPARATION_COST = 1;
 const SWAP_COST = 2;
 
+let sortingAlgoritms = [
+insertionMethod,
+shellSort,
+bubleSort,
+shakerSort,
+quickSort,
+selectionSort
+];
 
-const table = {};
+let files = [
+__dirname + '/data/tipicalCase:10.txt',
+__dirname + '/data/bestCase:10.txt',
+__dirname + '/data/worstCase:10.txt',
 
-async function test() {
-  try {
-    let dataString = await fs.readFile(__dirname + '/data/tipicalCase:10.txt', 'utf8');
-    let data = dataString.split(',');
-    let totalTime = shakerSort(data);
+__dirname + '/data/tipicalCase:100.txt',
+__dirname + '/data/bestCase:100.txt',
+__dirname + '/data/worstCase:100.txt',
 
-
-
-  } catch (error) {
-    console.log(error);
-  }
-}
+__dirname + '/data/tipicalCase:1000.txt',
+__dirname + '/data/bestCase:1000.txt',
+__dirname + '/data/worstCase:1000.txt',
+]
 
 test();
+
+async function test() {
+	let table = {};
+  try {
+	  for(let i = 0; i < files.length; i++){
+		let dataString = await fs.readFile(files[i], 'utf8');
+    		let dataArr = dataString.split(',');
+
+		  for(let j = 0; j < sortingAlgoritms;j++){
+			  let tt = sortingAlgoritms[j](dataArr); 
+		  }
+
+
+
+	}}
+	catch (error) {
+		console.log(error);
+	}
+}
+
 
 
 function swap(arr, i, j) {
   let aux = arr[i];
   arr[i] = arr[j];
   arr[j] = aux;
+}
+
+
+function selectionSort(arr){
+	console.log(arr);
+	let tt = 0;
+	for(let i =  0; i < arr.length -1; i++){
+		let minor = i;
+
+		for(let j = i +1; j < arr.length; j++){
+			tt += COMPARATION_COST;
+			if(arr[j] < arr[minor]){
+				minor = j;
+			}
+		}
+
+		tt += COMPARATION_COST;
+		if(minor != i){
+			tt += SWAP_COST;
+			swap(arr,i,minor);
+		}
+
+	}
+	console.log(arr);
+
+}
+
+
+// quicksort partition
+function partition(arr, low, high)
+{
+    let pivot = arr[high];
+    let i = low - 1;
+    for (let j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr, i, j);
+        }
+    }
+    swap(arr, i + 1, high);
+    return i + 1;
+}
+
+
+function quickSort(arr,low = 0,high = 'na'){
+	if(high == 'na'){
+		high = arr.length;
+	}
+
+    if (low < high) {
+        let pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
 }
 
 function shakerSort(arr) {
